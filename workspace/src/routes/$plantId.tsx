@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import PlantDetailsCard from "../components/PlantDetailsCard.tsx";
+
 export const Route = createFileRoute("/$plantId")({
   component: RouteComponent,
 });
@@ -7,5 +9,5 @@ export const Route = createFileRoute("/$plantId")({
 function RouteComponent() {
   const { plantId } = Route.useParams();
 
-  return <div>Showing Plant {plantId}</div>;
+  return <PlantDetailsCard plantId={plantId} />;
 }

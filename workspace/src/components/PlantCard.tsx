@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 import { useFormatDate } from "./use-format-date.ts";
 
 type PlantCardProps = {
@@ -25,7 +27,9 @@ export default function PlantCard({
   return (
     <div className={"PlantCard"}>
       <header>
-        <h2>{name}</h2>
+        <Link to={"/$plantId"} params={{ plantId: id }}>
+          <h2>{name}</h2>
+        </Link>
         <div>📍{location}</div>
       </header>
       <section>

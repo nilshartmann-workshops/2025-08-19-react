@@ -28,3 +28,14 @@ export const getPlantListOpts = () =>
       return response;
     },
   });
+
+export const getPlantOpts = (plantId: string) =>
+  queryOptions({
+    queryKey: ["plants", "details", plantId],
+    async queryFn() {
+      const response = await ky
+        .get("http://localhost:7200/api/plants/" + plantId)
+        .json<Plant>();
+      return response;
+    },
+  });

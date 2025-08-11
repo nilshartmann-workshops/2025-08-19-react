@@ -1,6 +1,7 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { twMerge } from "tailwind-merge";
 
-import { Plant } from "../types.ts";
+import { getPlantOpts } from "../queries.ts";
 import { getDaysUntilWatering } from "./date-utils.ts";
 import { useFormatDate } from "./use-format-date.ts";
 
@@ -13,8 +14,7 @@ export default function PlantDetailsCard({ plantId }: PlantDetailsCardProps) {
   //    - statt 'const plant: Plant = {};' die Pflanze mit useUseSuspenseQuery
   //      laden
 
-  // @ts-expect-error
-  const plant: Plant = {};
+  const { data: plant } = useSuspenseQuery(getPlantOpts(plantId));
   const formatDate = useFormatDate();
 
   const lastWatered = plant.lastWatered || new Date().toDateString();

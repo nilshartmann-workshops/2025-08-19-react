@@ -9,6 +9,8 @@ export const createQueryClient = () => {
   return new QueryClient({
     defaultOptions: {
       queries: {
+        // Im Fehlerfall nicht nochmal probieren
+        retry: false,
         refetchOnMount: true, // true ist der Default
         refetchIntervalInBackground: false,
         refetchOnWindowFocus: false,

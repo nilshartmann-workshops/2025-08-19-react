@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 /**
  * Calculates the number of days until the next watering based on the last watering date and the watering interval.
  *
@@ -16,4 +18,8 @@ export function getDaysUntilWatering(
   const diffTime = nextWatering.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return diffDays;
+}
+
+export function getTodayString() {
+  return dayjs().format("YYYY-MM-DD");
 }

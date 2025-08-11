@@ -22,10 +22,8 @@ export const getPlantListOpts = () =>
   queryOptions({
     queryKey: ["plants", "list"],
     async queryFn() {
-      const response = await ky
-        .get("http://localhost:7200/api/plants")
-        .json<Plant[]>();
-      return response;
+      const response = await ky.get("http://localhost:7200/api/plants").json();
+      return Plant.array().parse(response);
     },
   });
 
@@ -35,7 +33,7 @@ export const getPlantOpts = (plantId: string) =>
     async queryFn() {
       const response = await ky
         .get("http://localhost:7200/api/plants/" + plantId)
-        .json<Plant>();
-      return response;
+        .json();
+      return Plant.parse(response);
     },
   });

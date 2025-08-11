@@ -1,4 +1,8 @@
-import { queryOptions } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import _ky from "ky";
 
 import { Plant } from "./types.ts";
@@ -42,3 +46,27 @@ export const getPlantOpts = (plantId: string) =>
       return Plant.parse(response);
     },
   });
+
+export const useWaterPlantMutation = (plantId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    async mutationFn(lastWatered: string) {
+      const result = await ky
+        .put(
+          `http://localhost:7200/api/plants/${plantId}/lastWatered?slow=1400`,
+          {
+            json: {
+              lastWatered,
+            },
+          },
+        )
+        .json();
+
+      const updatedPlant = Plant.parse(result);
+      return updatedPlant;
+    },
+    onSuccess(plant) {
+      queryClient.setQueryData(getPlantOpts(plantId).queryKey, plant);
+    },
+  });
+};

@@ -1,8 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { twMerge } from "tailwind-merge";
 
-import { getPlantOpts } from "../queries.ts";
-import { getDaysUntilWatering } from "./date-utils.ts";
+import { getPlantOpts, useWaterPlantMutation } from "../queries.ts";
+import { getDaysUntilWatering, getTodayString } from "./date-utils.ts";
 import { useFormatDate } from "./use-format-date.ts";
 
 type PlantDetailsCardProps = {
@@ -16,6 +16,10 @@ export default function PlantDetailsCard({ plantId }: PlantDetailsCardProps) {
 
   const { data: plant } = useSuspenseQuery(getPlantOpts(plantId));
   const formatDate = useFormatDate();
+  const waterPlantMutation = useWaterPlantMutation(plant.id);
+
+  // wie könnten wir hier optimistic ui updates implementieren? 🤔
+  //   -> statt plant.lastWatered den Wert aus der Mutation verwenden!
 
   const lastWatered = plant.lastWatered || new Date().toDateString();
   const daysUntilWatering = getDaysUntilWatering(
@@ -37,6 +41,8 @@ export default function PlantDetailsCard({ plantId }: PlantDetailsCardProps) {
             className={twMerge(
               needsWatering ? "watering-alert-large" : "primary",
             )}
+            disabled={waterPlantMutation.isPending}
+            onClick={() => waterPlantMutation.mutate(getTodayString())}
           >
             <span>💧 Gießen!</span>
           </button>

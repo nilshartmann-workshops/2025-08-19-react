@@ -1,6 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
+  Link,
   Outlet,
   retainSearchParams,
 } from "@tanstack/react-router";
@@ -15,6 +16,9 @@ export const Route = createRootRouteWithContext<PlantManagerRouterContext>()({
   },
   component: () => (
     <div className={"AppLayout"}>
+      <Link className={"primary"} to={"/"}>
+        🏡 Home
+      </Link>
       <Outlet />
     </div>
   ),

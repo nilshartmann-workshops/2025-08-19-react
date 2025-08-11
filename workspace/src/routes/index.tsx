@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
@@ -7,7 +7,13 @@ export const Route = createFileRoute("/")({
 function RouteComponent() {
   return (
     <div className={"AppContainer"}>
-      <h1 className={"AppHeader"}>🌱 Hello React 👋 </h1>
+      <Link className={"primary"} to={"/add"}>
+        + Neue Pflanze
+      </Link>
+
+      <Link to={"/$plantId"} params={{ plantId: "1" }}>
+        Plant one
+      </Link>
     </div>
   );
 }

@@ -1,6 +1,10 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useQueryErrorResetBoundary,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Suspense } from "react";
+import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { z } from "zod/v4";
 
 import PlantCardList from "../components/PlantCardList.tsx";
@@ -17,6 +21,8 @@ export const Route = createFileRoute("/")({
 });
 
 function RouteComponent() {
+  const { reset } = useQueryErrorResetBoundary();
+
   return (
     <div className={"AppContainer"}>
       <Link className={"primary"} to={"/add"}>
@@ -49,9 +55,31 @@ function RouteComponent() {
           Last Watered
         </Link>
       </div>
-      <Suspense fallback={<PlantCardListPlaceholder />}>
-        <PlantCardListLoader />
-      </Suspense>
+      <ErrorBoundary FallbackComponent={MyErrorBoundary} onReset={reset}>
+        <Suspense fallback={<PlantCardListPlaceholder />}>
+          <PlantCardListLoader />
+        </Suspense>
+      </ErrorBoundary>
+    </div>
+  );
+}
+
+function MyErrorBoundary(props: FallbackProps) {
+  return (
+    <div className={"PlantCard"}>
+      <header>
+        <h2>Fehler!</h2>
+      </header>
+      <div>{props.error.toString()}</div>
+      <section>
+        <button
+          type={"button"}
+          className={"primary"}
+          onClick={() => props.resetErrorBoundary()}
+        >
+          Retry!
+        </button>
+      </section>
     </div>
   );
 }

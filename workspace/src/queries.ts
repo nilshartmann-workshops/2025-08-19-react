@@ -29,7 +29,7 @@ export const getPlantListOpts = (
     queryKey: ["plants", "list", { orderBy }],
     async queryFn() {
       const searchParams = new URLSearchParams({ orderBy });
-      searchParams.set("slow", "2400");
+      // searchParams.set("slow", "2400");
       const response = await ky
         .get("http://localhost:7200/api/plants?" + searchParams)
         .json();

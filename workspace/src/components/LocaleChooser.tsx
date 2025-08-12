@@ -1,11 +1,14 @@
+import { useLocaleStore } from "./locale-store.ts";
+
 const knownLocales = ["de-DE", "en-GB", "ko-KR"];
 
 export function LocaleChooser() {
   // // todo: lies das Locale aus dem globalen Zustand
-  const currentLocale = "de-DE";
+  const currentLocale = useLocaleStore((s) => s.locale);
+  const setLocale = useLocaleStore((s) => s.setLocale);
 
   const handleLocaleChange = (newLocale: string) => {
-    // todo: aktualisiere das Locale im globalen Zustand
+    setLocale(newLocale);
   };
 
   return (

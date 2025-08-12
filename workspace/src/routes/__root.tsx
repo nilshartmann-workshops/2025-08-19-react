@@ -6,6 +6,8 @@ import {
   retainSearchParams,
 } from "@tanstack/react-router";
 
+import { LocaleChooser } from "../components/LocaleChooser.tsx";
+
 type PlantManagerRouterContext = {
   queryClient: QueryClient;
 };
@@ -16,6 +18,7 @@ export const Route = createRootRouteWithContext<PlantManagerRouterContext>()({
   },
   component: () => (
     <div className={"AppLayout"}>
+      <LocaleChooser />
       <Link className={"primary"} to={"/"}>
         🏡 Home
       </Link>

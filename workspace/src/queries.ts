@@ -67,6 +67,7 @@ export const useWaterPlantMutation = (plantId: string) => {
     },
     onSuccess(plant) {
       queryClient.setQueryData(getPlantOpts(plantId).queryKey, plant);
+      queryClient.invalidateQueries({ queryKey: ["plants", "list"] });
     },
   });
 };

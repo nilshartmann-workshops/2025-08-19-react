@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
+import { useWaterPlantMutation } from "../queries.ts";
+import { getTodayString } from "./date-utils.ts";
 import { useFormatDate } from "./use-format-date.ts";
 
 type PlantCardProps = {
@@ -18,6 +20,7 @@ export default function PlantCard({
   lastWatered,
 }: PlantCardProps) {
   const formatDate = useFormatDate();
+  const waterPlantMutation = useWaterPlantMutation(id);
 
   const wateringInfo =
     wateringInterval === 1
@@ -35,6 +38,13 @@ export default function PlantCard({
       <section>
         <div>{wateringInfo}</div>
         {lastWatered ? <div>Zuletzt: {formatDate(lastWatered)}</div> : null}
+        <button
+          className={"primary"}
+          type={"button"}
+          onClick={() => waterPlantMutation.mutate(getTodayString())}
+        >
+          Jetzt gießen!
+        </button>
       </section>
     </div>
   );

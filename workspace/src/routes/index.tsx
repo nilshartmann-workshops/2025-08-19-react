@@ -1,8 +1,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Suspense } from "react";
 import { z } from "zod/v4";
 
 import PlantCardList from "../components/PlantCardList.tsx";
+import PlantCardListPlaceholder from "../components/PlantCardListPlaceholder.tsx";
 import { getPlantListOpts } from "../queries.ts";
 
 const RouteSearchParams = z.object({
@@ -47,7 +49,9 @@ function RouteComponent() {
           Last Watered
         </Link>
       </div>
-      <PlantCardListLoader />
+      <Suspense fallback={<PlantCardListPlaceholder />}>
+        <PlantCardListLoader />
+      </Suspense>
     </div>
   );
 }
@@ -58,7 +62,14 @@ function RouteComponent() {
 //  - warum (nicht) in PlantCardList die Daten laden 🤔
 function PlantCardListLoader() {
   const { orderBy } = Route.useSearch();
-  const { data: plants } = useSuspenseQuery(getPlantListOpts(orderBy));
+  const { data: plants, isRefetching } = useSuspenseQuery(
+    getPlantListOpts(orderBy),
+  );
 
-  return <PlantCardList plants={plants} />;
+  return (
+    <div>
+      {isRefetching && "Refetching..."}
+      <PlantCardList plants={plants} />
+    </div>
+  );
 }

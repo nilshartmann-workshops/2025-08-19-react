@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod/v4";
+
+import IntervalSelector from "./IntervalSelector.tsx";
 
 const locations = [
   "Wohnzimmer",
@@ -16,6 +18,9 @@ const locations = [
 const PlantFormState = z.object({
   name: z.string().nonempty("Bitte gib den Namen deiner Pflanze ein"),
   location: z.string().nonempty("Bitte wähle den Standort deiner Pflanze aus"),
+  wateringInterval: z
+    .number("Bitte gib an, wie häufig die Pflanze gegossen werden muss")
+    .min(1, "Bitte gib die Anzahl in Tagen ein, mindestens jeden Tag"),
   // lastWatered: z
   //   .string()
   //   .transform((s) => (s === "" ? undefined : s))
@@ -66,7 +71,22 @@ export default function PlantForm() {
         <ErrorMessage msg={form.formState.errors.location?.message} />
       </div>
 
-      {/* Gießinterval kommt später */}
+      <div className={"FormControl"}>
+        <Controller
+          control={form.control}
+          name={"wateringInterval"}
+          render={(field) => {
+            return (
+              <IntervalSelector
+                interval={field.field.value}
+                onIntervalChange={field.field.onChange}
+                error={field.fieldState.error?.message !== undefined}
+              />
+            );
+          }}
+        />
+        <ErrorMessage msg={form.formState.errors.wateringInterval?.message} />
+      </div>
 
       <div className={"FormControl"}>
         <label>Zuletzt gegossen</label>

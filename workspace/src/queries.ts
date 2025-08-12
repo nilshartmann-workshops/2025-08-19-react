@@ -18,11 +18,16 @@ export const ky = _ky.extend({
 //   ✅ was müssen wir machen, wenn wir den Query woanders verwenden wollen?
 //   ✅ was passiert, wenn wir die Backend URL anpassen müssen (z.B. je nach Deployment)
 
-export const getPlantListOpts = () =>
+export const getPlantListOpts = (
+  orderBy: "id" | "name" | "lastWatered" = "id",
+) =>
   queryOptions({
-    queryKey: ["plants", "list"],
+    queryKey: ["plants", "list", { orderBy }],
     async queryFn() {
-      const response = await ky.get("http://localhost:7200/api/plants").json();
+      const searchParams = new URLSearchParams({ orderBy });
+      const response = await ky
+        .get("http://localhost:7200/api/plants?" + searchParams)
+        .json();
       return Plant.array().parse(response);
     },
   });

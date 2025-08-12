@@ -72,3 +72,29 @@ export const useWaterPlantMutation = (plantId: string) => {
     },
   });
 };
+
+type PlantFormState = {
+  name: string;
+  location: string;
+  wateringInterval: number;
+  lastWatered?: string;
+};
+
+export const useAddPlantMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    async mutationFn(data: PlantFormState) {
+      const response = await ky
+        .post("http://localhost:7200/api/plants", {
+          json: data,
+        })
+        .json();
+      const newPlant = Plant.parse(response);
+      return newPlant;
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["plants", "list"] });
+    },
+  });
+};

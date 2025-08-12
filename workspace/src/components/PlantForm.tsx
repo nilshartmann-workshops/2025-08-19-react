@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod/v4";
 
+import { useAddPlantMutation } from "../queries.ts";
 import IntervalSelector from "./IntervalSelector.tsx";
 
 const locations = [
@@ -34,8 +35,12 @@ export default function PlantForm() {
     resolver: zodResolver(PlantFormState),
   });
 
+  const addPlantMutation = useAddPlantMutation();
+
   const handleSave = (data: PlantFormState) => {
     console.log("DATA", data);
+
+    addPlantMutation.mutate(data);
   };
 
   const handleError = (errs: any) => {
@@ -115,6 +120,12 @@ export default function PlantForm() {
           Pflanze hinzufügen 🌱
         </button>
       </div>
+      {addPlantMutation.isError && (
+        <div className={"error-message"}>Speichern fehlgeschlagen</div>
+      )}
+      {addPlantMutation.isSuccess && (
+        <div className={"success-message"}>Pflanze angelegt</div>
+      )}
     </form>
   );
 }

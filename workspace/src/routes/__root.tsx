@@ -14,7 +14,7 @@ export const Route = createRootRouteWithContext<PlantManagerRouterContext>()({
     middlewares: [retainSearchParams(true)],
   },
   component: () => (
-    <div className={"AppLayout"}>
+    <div className={"AppLayout h-svh overflow-y-scroll"}>
       <Link to={"/"}>
         Home
       </Link>

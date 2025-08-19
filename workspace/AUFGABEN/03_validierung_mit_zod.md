@@ -2,7 +2,8 @@
 
 # Dateien
 
-- src/components/types.ts
+- src/components/types.ts (<-- anlegen)
+- src/queries.ts
 - src/components/types.test.ts (bekommst du von mir)
 
 # Aufgabe

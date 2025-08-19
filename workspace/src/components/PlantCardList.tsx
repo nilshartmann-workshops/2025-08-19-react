@@ -1,10 +1,11 @@
-import { Plant } from "../types.ts";
+import type { Plant } from "../types.ts";
 import PlantCard from "./PlantCard.tsx";
 
 type PlantCardListProps = {
   plants: Plant[];
 };
 export default function PlantCardList({ plants }: PlantCardListProps) {
+
   return (
     <div className={"PlantCardList"}>
       {plants.map((p) => (

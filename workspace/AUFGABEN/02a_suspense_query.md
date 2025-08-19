@@ -1,7 +1,7 @@
 # Daten lesen mit TanStack Query
 
 # Dateien
-- src/queries.tsx (<- anlegen!)
+- src/queries.ts (<- anlegen!)
 - src/routes/index.tsx
 
 # Aufgabe

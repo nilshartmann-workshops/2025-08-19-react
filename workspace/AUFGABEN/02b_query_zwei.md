@@ -2,7 +2,7 @@
 
 # Dateien
 
-- src/queries.tsx
+- src/queries.ts
 - src/routes/index.tsx
 
 # Aufgabe

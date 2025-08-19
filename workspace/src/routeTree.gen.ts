@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as EditorRouteImport } from './routes/editor'
 import { Route as AddRouteImport } from './routes/add'
 import { Route as PlantIdRouteImport } from './routes/$plantId'
 import { Route as IndexRouteImport } from './routes/index'
 
+const EditorRoute = EditorRouteImport.update({
+  id: '/editor',
+  path: '/editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AddRoute = AddRouteImport.update({
   id: '/add',
   path: '/add',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$plantId': typeof PlantIdRoute
   '/add': typeof AddRoute
+  '/editor': typeof EditorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$plantId': typeof PlantIdRoute
   '/add': typeof AddRoute
+  '/editor': typeof EditorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$plantId': typeof PlantIdRoute
   '/add': typeof AddRoute
+  '/editor': typeof EditorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$plantId' | '/add'
+  fullPaths: '/' | '/$plantId' | '/add' | '/editor'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$plantId' | '/add'
-  id: '__root__' | '/' | '/$plantId' | '/add'
+  to: '/' | '/$plantId' | '/add' | '/editor'
+  id: '__root__' | '/' | '/$plantId' | '/add' | '/editor'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PlantIdRoute: typeof PlantIdRoute
   AddRoute: typeof AddRoute
+  EditorRoute: typeof EditorRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/editor': {
+      id: '/editor'
+      path: '/editor'
+      fullPath: '/editor'
+      preLoaderRoute: typeof EditorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/add': {
       id: '/add'
       path: '/add'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PlantIdRoute: PlantIdRoute,
   AddRoute: AddRoute,
+  EditorRoute: EditorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

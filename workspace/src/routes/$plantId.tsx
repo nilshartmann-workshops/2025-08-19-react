@@ -1,4 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getPlantByIdOpts } from "../queries.ts";
+import PlantDetailsCard from "../components/PlantDetailsCard.tsx";
 
 export const Route = createFileRoute('/$plantId')({
   component: RouteComponent,
@@ -7,6 +10,5 @@ export const Route = createFileRoute('/$plantId')({
 function RouteComponent() {
   const {plantId} = Route.useParams();
 
-
-  return <div>Hello {plantId}</div>
+  return <PlantDetailsCard plantId={plantId} />
 }

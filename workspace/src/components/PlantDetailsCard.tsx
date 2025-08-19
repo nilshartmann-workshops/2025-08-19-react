@@ -3,18 +3,16 @@ import { twMerge } from "tailwind-merge";
 import { Plant } from "../types.ts";
 import { getDaysUntilWatering } from "./date-utils.ts";
 import { useFormatDate } from "./use-format-date.ts";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getPlantByIdOpts } from "../queries.ts";
 
 type PlantDetailsCardProps = {
   plantId: string;
 };
 export default function PlantDetailsCard({ plantId }: PlantDetailsCardProps) {
-  // todo:
-  //    - Die Zeile '@ts-expect-error' entfernen
-  //    - statt 'const plant: Plant = {};' die Pflanze mit useUseSuspenseQuery
-  //      laden
-
-  // @ts-expect-error
-  const plant: Plant = {};
+  const {data: plant} = useSuspenseQuery(
+    getPlantByIdOpts(plantId)
+  );
   const formatDate = useFormatDate();
 
   const lastWatered = plant.lastWatered || new Date().toDateString();

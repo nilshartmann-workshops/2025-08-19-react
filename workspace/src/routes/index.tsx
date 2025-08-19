@@ -4,9 +4,15 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import ky from "ky";
 import { Plant } from "../types.ts";
 import { getPlantListOpts } from "../queries.ts";
+import { z } from "zod/v4";
+
+const RouteSearchParams = z.object({
+  orderBy: z.enum(["id", "name", "lastWatered"]).optional(),
+});
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
+  validateSearch: RouteSearchParams
 });
 
 function RouteComponent() {
@@ -16,6 +22,35 @@ function RouteComponent() {
         className={"primary"}
         to={"/add"}>+ Neue Pflanze</Link>
 
+      <div className={"SortButtons"}>
+        <Link
+          to={"/"}
+          search={{ orderBy: "id" }}
+          activeProps={{ className: "active" }}
+        >
+          Id
+        </Link>
+        <Link
+          to={"/"}
+          activeProps={{ className: "active" }}
+          search={{
+            orderBy: "name",
+          }}
+        >
+          Name
+        </Link>
+        <Link
+          to={"/"}
+          activeProps={{ className: "active" }}
+          search={{
+            orderBy: "lastWatered",
+          }}
+        >
+          Last Watered
+        </Link>
+      </div>
+
+
       <PlantCardListLoader />
 
     </div>
@@ -23,8 +58,9 @@ function RouteComponent() {
 }
 
 function PlantCardListLoader() {
+  const {orderBy} = Route.useSearch();
   const {data: plants} = useSuspenseQuery(
-    getPlantListOpts()
+    getPlantListOpts(orderBy)
   );
 
   return <PlantCardList plants={plants} />

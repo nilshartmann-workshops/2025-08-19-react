@@ -2,12 +2,18 @@ import ky from "ky";
 import { Plant } from "./types.ts";
 import { queryOptions } from "@tanstack/react-query";
 
-export function getPlantListOpts() {
+// const plantQueryKeys = {
+//   singlePlant(plantId: string) { return [] },
+//   plantList(orderBy: string)  { return [] },
+// }
+
+
+export function getPlantListOpts(orderBy: "id"| "name"| "lastWatered" = "id") {
   return queryOptions({
-    queryKey: ["plants", "list"],
+    queryKey: ["plants", "list", {orderBy}],
     async queryFn() {
       const response = await ky
-        .get("http://localhost:7200/api/plants")
+        .get("http://localhost:7200/api/plants?orderBy=" + orderBy)
         .json();
 
       const plants = Plant.array().parse(response);

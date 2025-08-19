@@ -6,10 +6,11 @@ import { RouterProvider } from "@tanstack/react-router";
 import { createRoot } from "react-dom/client";
 
 import { plantManagerRouter, queryClient } from "./create-router.tsx";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <RouterProvider router={plantManagerRouter} />
-    {/*<ReactQueryDevtools />*/}
+    <ReactQueryDevtools />
   </QueryClientProvider>,
 );

@@ -13,7 +13,7 @@ export function getPlantListOpts(orderBy: "id"| "name"| "lastWatered" = "id") {
     queryKey: ["plants", "list", {orderBy}],
     async queryFn() {
       const response = await ky
-        .get("http://localhost:7200/api/plants?orderBy=" + orderBy + "&slow=2400")
+        .get("http://localhost:7200/api/plants?orderBy=" + orderBy + "&slow=10")
         .json();
 
       const plants = Plant.array().parse(response);

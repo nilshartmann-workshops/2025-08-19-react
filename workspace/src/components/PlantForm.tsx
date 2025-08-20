@@ -1,12 +1,13 @@
 import { z } from "zod/v4";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { getPlantByIdOpts } from "../queries.ts";
 import { Plant } from "../types.ts";
+import { useState } from "react";
 
 const PlantFormState = z.object({
-  name: z.string().nonempty(),
+  name: z.string().nonempty("Bitte Pflanzenamen eingeben"),
   location: z.string().nonempty(),
   lastWatered: z.iso.date().optional()
   //                .transform(
@@ -38,6 +39,8 @@ export default function PlantForm({existingPlant}:{existingPlant?: Plant}) {
     defaultValues: existingPlant ? existingPlant : {
 
     },
+    mode: "onBlur",
+    // reValidateMode: "onBlur"
   });
 
   const handleFormSubmit = (data: PlantFormState) => {
@@ -48,9 +51,20 @@ export default function PlantForm({existingPlant}:{existingPlant?: Plant}) {
     console.log("FORM ERRORS", err);
   }
 
+  const [counter, setCounter] = useState(0)
+
+const plantName  =""
+  // const [plantName] = form.watch(["name"])
+
   return <form
     // onReset={() => form.reset()}
     onSubmit={form.handleSubmit(handleFormSubmit,handleError)}>
+    <button type={"button"} onClick={() => setCounter(counter +1 )}>
+      Increase{counter}
+    </button>
+    <p>Pflanzenname: {plantName}</p>
+    {/*<PlantName watch={form.watch} />*/}
+    <PlantNameMitControl control={form.control} />
     <div className={"FormControl"}>
       <label>
         Name
@@ -58,12 +72,14 @@ export default function PlantForm({existingPlant}:{existingPlant?: Plant}) {
       <input
         {...form.register("name")}
       />
+      <p className={"error-message"}> {form.formState.errors.name?.message}</p>
     </div>
     <div className={"FormControl"}>
       <label>
         Standort
       </label>
       <select {...form.register("location")}  >
+        <option></option>
         <option>Wohnzimmer</option>
         <option>Schlafzimmer</option>
         <option>Küche</option>
@@ -84,6 +100,29 @@ export default function PlantForm({existingPlant}:{existingPlant?: Plant}) {
       <button type={"button"} onClick={() => form.reset()}>Reset</button>
       <button className={"primary"}>Speichern</button>
     </div>
+    <Label />
 
   </form>
+}
+
+function Label() {
+  return <div>Huhu</div>
+}
+
+function PlantName({watch}: {watch: any}) {
+  const [plantName] = watch(["name"])
+  return <div>
+    Plantname: {plantName}
+  </div>
+}
+
+function PlantNameMitControl({control}: {control: any}) {
+  const plantName = useWatch({
+    control,
+    name: "name"
+  })
+  // const [plantName] = watch(["name"])
+  return <div>
+    Plantname: {plantName}
+  </div>
 }

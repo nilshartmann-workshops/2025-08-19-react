@@ -1,10 +1,10 @@
 import { twMerge } from "tailwind-merge";
 
 import { Plant } from "../types.ts";
-import { getDaysUntilWatering } from "./date-utils.ts";
+import { getDaysUntilWatering, getTodayString } from "./date-utils.ts";
 import { useFormatDate } from "./use-format-date.ts";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getPlantByIdOpts } from "../queries.ts";
+import { getPlantByIdOpts, useMutateLastWatered } from "../queries.ts";
 
 type PlantDetailsCardProps = {
   plantId: string;
@@ -13,9 +13,15 @@ export default function PlantDetailsCard({ plantId }: PlantDetailsCardProps) {
   const {data: plant} = useSuspenseQuery(
     getPlantByIdOpts(plantId)
   );
+
+  const mutation = useMutateLastWatered(plantId);
+
   const formatDate = useFormatDate();
 
-  const lastWatered = plant.lastWatered || new Date().toDateString();
+  const lastWatered = mutation.isPending ?
+    getTodayString() :
+    plant.lastWatered || new Date().toDateString()
+  ;
   const daysUntilWatering = getDaysUntilWatering(
     lastWatered,
     plant.wateringInterval,
@@ -35,6 +41,8 @@ export default function PlantDetailsCard({ plantId }: PlantDetailsCardProps) {
             className={twMerge(
               needsWatering ? "watering-alert-large" : "primary",
             )}
+            disabled={mutation.isPending}
+            onClick={() => mutation.mutate(getTodayString())}
           >
             <span>💧 Gießen!</span>
           </button>
@@ -57,7 +65,7 @@ export default function PlantDetailsCard({ plantId }: PlantDetailsCardProps) {
           <div className="detail-section">
             <h3 className="section-title">Zuletzt gegossen</h3>
             <p className="section-content">
-              {plant.lastWatered ? formatDate(plant.lastWatered) : "Unbekannt"}
+              {lastWatered ? formatDate(lastWatered) : "Unbekannt"}
             </p>
           </div>
 

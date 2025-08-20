@@ -108,6 +108,7 @@ function PlantCardListLoader() {
   const {
     data: plants,
     isRefetching,
+
   } = useSuspenseQuery({
     ...getPlantListOpts(orderBy),
   });

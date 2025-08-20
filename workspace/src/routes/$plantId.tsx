@@ -5,6 +5,9 @@ import PlantDetailsCard from "../components/PlantDetailsCard.tsx";
 
 export const Route = createFileRoute('/$plantId')({
   component: RouteComponent,
+  loader({params}) {
+    console.log("LOADER FOR PLANT", params.plantId);
+  }
 })
 
 function RouteComponent() {

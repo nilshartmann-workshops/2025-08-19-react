@@ -13,7 +13,7 @@ export function getPlantListOpts(orderBy: "id"| "name"| "lastWatered" = "id") {
     queryKey: ["plants", "list", {orderBy}],
     async queryFn() {
       const response = await ky
-        .get("http://localhost:7200/api/plants?orderBy=" + orderBy + "&slow=10")
+        .get("http://localhost:7200/api/plants?orderBy=" + orderBy + "&slow=20")
         .json();
 
       const plants = Plant.array().parse(response);
@@ -31,6 +31,16 @@ export function getPlantByIdOpts(plantId: string) {
         .json();
       const plant = Plant.parse(response);
       return plant;
+    }
+  })
+}
+
+export function getRandomQuoteOpts() {
+  return queryOptions({
+    queryKey: ["random-quote"],
+    async queryFn() {
+      return ky.get("http://localhost:7200/api/random-quote?slow=10")
+        .json<string>()
     }
   })
 }

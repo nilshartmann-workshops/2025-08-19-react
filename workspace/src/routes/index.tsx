@@ -3,12 +3,13 @@ import PlantCardList from "../components/PlantCardList.tsx";
 import {
   keepPreviousData,
   useQuery,
+  useQueryClient,
   useQueryErrorResetBoundary,
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import ky from "ky";
 import { Plant } from "../types.ts";
-import { getPlantListOpts } from "../queries.ts";
+import { getPlantListOpts, getRandomQuoteOpts } from "../queries.ts";
 import { z } from "zod/v4";
 import { Suspense, useEffect, useState, useTransition } from "react";
 import PlantCardListPlaceholder from "../components/PlantCardListPlaceholder.tsx";
@@ -21,10 +22,18 @@ const RouteSearchParams = z.object({
 export const Route = createFileRoute("/")({
   component: RouteComponent,
   validateSearch: RouteSearchParams,
+  loader({context}) {
+    // context.queryClient.ensureQueryData(getRandomQuoteOpts())
+    context.queryClient.ensureQueryData(getRandomQuoteOpts())
+  }
 });
 
 function RouteComponent() {
   const { reset } = useQueryErrorResetBoundary();
+  // const queryClient = useQueryClient();
+
+  // useQuery(getRandomQuoteOpts());
+
 
   return (
     <div className={"AppContainer"}>
@@ -105,7 +114,7 @@ function PlantCardListLoader() {
 
 
   return <div>
-    {isRefetching && <div>Refetching data...</div>}
+    <RandomQuote />
     <PlantCardList plants={plants} />
   </div>;
 }
@@ -131,3 +140,11 @@ function PlantCardListLoader() {
 //     <PlantCardList plants={plants!} />
 //   </div>
 // }
+
+function RandomQuote() {
+  const {data: quote} = useSuspenseQuery(getRandomQuoteOpts())
+
+  return <div>Quote: {quote}</div>
+
+
+}

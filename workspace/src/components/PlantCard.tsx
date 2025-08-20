@@ -27,7 +27,9 @@ export default function PlantCard({
     <div className={"PlantCard"}>
       <header>
         <h2>
-          <Link to={"/$plantId"} params={{
+          <Link to={"/$plantId"}
+                preload={"viewport"}
+                params={{
             plantId: id
           }}>
           {name}
